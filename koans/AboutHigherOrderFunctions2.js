@@ -1,9 +1,11 @@
+var _; //globals
+
 describe("About Higher Order Functions pt 2", function () {
 
   it("should use filter to select array elements that meet a criteria", function () {
     // return a filer people over 40
     var people = [{name: "name", age: 41}, {name: "name", age: 22},{name: "name", age: 47},{name: "name", age: 35}];
-    var peopleOverFourty = people.filter(function (x) {/* FILL ME IN */});
+    var peopleOverFourty = people.filter(function (x) { return x.age > 40; });
 
     expect(peopleOverFourty).toEqual([{name: "name", age: 41}, {name: "name", age: 47}]);
   });
@@ -11,7 +13,7 @@ describe("About Higher Order Functions pt 2", function () {
   it("should use map to transform elements in an array into a new array", function () {
     // return a list of everyone's name
     var people = [{name: "name", age: 41}, {name: "name", age: 22},{name: "name", age: 47}];
-    var names = people.map(function(x) { /* FILL ME IN */});
+    var names = people.map(function(x) { return x.age; });
 
     expect(names).toEqual([41, 22, 47]);
   });
@@ -19,7 +21,7 @@ describe("About Higher Order Functions pt 2", function () {
   it("should use 'reduce' to combine elements in an array into a new value", function () {
     // sum these numbers
     var numbers = [1, 2, 3];
-    var reduction = numbers.reduce(function(acc, n) { /* FILL ME IN */}, 0);
+    var reduction = numbers.reduce(function(acc, n) { return acc + n; }, 0);
 
     expect(reduction).toBe(6);
   });
@@ -31,11 +33,11 @@ describe("About Higher Order Functions pt 2", function () {
       {name: "Aundrea", dancing: 8, performing: 5}, {name: "Aubrey", dancing: 8, performing: 6, otherObligations: ''},  {name: "Robert", dancing: 7, performing: 9} ];
 
     // filter out band members who have dancing skill 3 or less
-    var afterRoundOne = bandMembers.filter( /* FILL ME IN */ );
+    var afterRoundOne = bandMembers.filter( x => x.dancing > 3 );
     expect(afterRoundOne.length).toEqual(8);
 
     // Remove band members who have otherObligations (only filter members who have the 'otherObligations' property AND have some value in that property, not an empty string)
-    var afterRoundTwo = afterRoundOne.filter( /* FILL ME IN */ );
+    var afterRoundTwo = afterRoundOne.filter( x => !(x.otherObligations && x.otherObligations !== '') );
     expect(afterRoundTwo.length).toEqual(6);
   });
 
@@ -44,19 +46,19 @@ describe("About Higher Order Functions pt 2", function () {
                        {name: "Aundrea", dancing: 8, performing: 5, otherObligations: "Something"}, {name: "Aubrey", dancing: 8, performing: 6, otherObligations: ''},  {name: "Robert", dancing: 7, performing: 9}];
 
     // Transform bandMembers into list containing the length of each band member's name
-    var nameLengths = bandMembers.map( /* FILL ME IN */ );
+    var nameLengths = bandMembers.map( x => x.name.length );
     expect(nameLengths.length).toEqual(6);
     expect(nameLengths).toEqual([5, 7, 7, 7, 6, 6]);
 
     // Transform bandMembers into a list of names and each members strength
     // for example "Brian: dancer" or "Aubrey: performer"
-    var names = bandMembers.map( /* FILL ME IN */ );
+    var names = bandMembers.map( x => `${x.name}: ${x.dancing > x.performing ? "dancer" : "performer"}` );
     expect(names).toEqual(["Brian: dancer", "Kristen: dancer", "Bethany: dancer", "Aundrea: dancer", "Aubrey: dancer", "Robert: performer"]);
     expect(names.length).toEqual(6);
 
     // Map over all of the band members and return a html string that contains each person's names, dancing skill, performing skill
     // The first element should be a string equal to this: "<div>Name: Donnie <br> Dancing: 3 <br> Performing: 5 </div>"
-    var profiles = bandMembers.map( /* FILL ME IN */);
+    var profiles = bandMembers.map( x => `<div>Name: ${x.name} <br> Dancing: ${x.dancing} <br> Performing: ${x.performing}</div>`);
     expect(profiles.length).toEqual(6);
     expect(profiles[0]).toEqual(`<div>Name: ${bandMembers[0].name} <br> Dancing: ${bandMembers[0].dancing} <br> Performing: ${bandMembers[0].performing}</div>`);
   });
@@ -66,11 +68,11 @@ describe("About Higher Order Functions pt 2", function () {
                        {name: "Aundrea", dancing: 8, performing: 5, otherObligations: "Something"}, {name: "Aubrey", dancing: 8, performing: 6, otherObligations: ''},  {name: "Robert", dancing: 7, performing: 9}];
 
     // reduce bandMembers to get the sum of all dancing properties
-    var totalDancingSkillLeft = bandMembers.reduce( /* FILL ME IN */ );
+    var totalDancingSkillLeft = bandMembers.reduce((acc,x) => { return acc + x.dancing; }, 0 );
     expect(totalDancingSkillLeft).toEqual(42);
 
     // reduce bandMembers to get the sum of all performing properties
-    var totalPerformingSkillLeft = bandMembers.reduce( /* FILL ME IN */);
+    var totalPerformingSkillLeft = bandMembers.reduce((acc, x) => { return acc + x.performing; }, 0);
     expect(totalPerformingSkillLeft).toEqual(34);
 
     // What was the highest performer and highest dancer score?
@@ -78,17 +80,21 @@ describe("About Higher Order Functions pt 2", function () {
     // 'maxPerform' should contain the highest perform score and 'maxDance' the highest dance score out of all the members
     // Hint: the initial value passed to reduce will be an object
     var bestPerformAndDance = bandMembers.reduce( (best, m) => {
-      /* FILL ME IN */
+      return { maxPerform: Math.max(m.performing, best.maxPerform), maxDance: Math.max(m.dancing, best.maxDance) };
     },{maxPerform: 0, maxDance: 0});
     expect(bestPerformAndDance).toEqual({maxPerform: 9, maxDance: 8});
   });
 
   it("should write a function that turns an array of numbers into an array with just two numbers. The first will be the count of all the negative numbers, the second the sum of all positive numbers", function(){
     //For Example: countOfPositveAndSumOfNegatives([-1,-2,3,4]) === [2,7]
-    //There are two negative numbres and 3+4 =7 
+    //There are two negative numbres and 3+4 =7
 
     var countOfPositveAndSumOfNegatives = function(arr) {
-      return "FILL ME IN";
+      return arr.reduce((acc, x) => {
+        var count = acc[0] + (x > 0 ? 1 : 0);
+        var sum = acc[1] + (x > 0 ? x : 0);
+        return [count,sum];
+      }, [0,0]);
     };
 
     var numbers = [-1,-2,-3,-4,0,3,5,2,5];
@@ -102,11 +108,22 @@ describe("About Higher Order Functions pt 2", function () {
     // arrayDiff([1,2,2,2,3],[2]) == [1,3]
 
     var arrayDiff = function(array1, array2) {
-      return "FILL ME IN";
+      var diff = [];
+      array1.map(x => {
+       if(! _(array2).any(y => x===y)) {
+         diff.push(x);
+       }
+      });
+      array2.map(x => {
+       if(! _(array1).any(y => x===y)) {
+         diff.push(x);
+       }
+      });
+      return diff;
     };
 
     expect(arrayDiff([1,2,3], [1,2])).toEqual([3]);
-    expect(arrayDiff([1,2,2,2,3], [2])).toEqual([1,3]);
+    expect(arrayDiff([2], [1,2,2,2,3])).toEqual([1,3]);
   });
 
   it("should write a function to capitalize every word in a string", function(){
@@ -124,7 +141,10 @@ describe("About Higher Order Functions pt 2", function () {
     // turn the array back into a string
 
     var jadenCase = function(string){
-      return "FILL ME IN";
+      return string
+        .split(" ")
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1) )
+        .join(" ");
     };
 
     expect(jadenCase("How can mirrors be real if our eyes aren't real")).toEqual("How Can Mirrors Be Real If Our Eyes Aren't Real");
@@ -133,7 +153,7 @@ describe("About Higher Order Functions pt 2", function () {
   it("should use reduce to sum all odd numbers in an array", function(){
     var numbers = [1,2,3,4,5,6,7,8,9];
     var sumOfOdds = numbers.reduce(function(acc, n){
-      /* FILL ME IN */
+      return n % 2 !== 0? acc + n : acc;
     }, 0);
     expect(sumOfOdds).toEqual(1+3+5+7+9);
   });
@@ -154,7 +174,12 @@ describe("About Higher Order Functions pt 2", function () {
     // hint: the callback for reduce will have an optional argument for the index of the current item
 
     var binaryToNumber = function(array) {
-      /* FILL ME IN */
+      return array
+        .reverse()
+        .reduce((acc, x, i) => {
+          var multiplier = i===0 ? 1 : Math.pow(2, i);
+          return acc + x * multiplier;
+        }, 0);
     };
 
     expect(binaryToNumber([0,0,1])).toEqual(1);
@@ -164,19 +189,25 @@ describe("About Higher Order Functions pt 2", function () {
     expect(binaryToNumber([0,0,1,1,1,1])).toEqual(15);
     expect(binaryToNumber([1,0,1,1])).toEqual(11);
   });
-  
+
   it("can write your own filter function", function() {
     var myFilter = function(arr, func){
-      /* FILL ME IN */
+      for(var i = arr.length - 1; i >= 0; i--) {
+        if(!func(arr[i])) {
+          arr.splice(i, 1);
+        }
+      }
       return arr;
     };
 
     expect(myFilter([1,2,3], (i) => i > 2)).toEqual([3]);
   });
-  
+
   it("can write your own map function", function() {
     var myMap = function(arr, func){
-      /* FILL ME IN */
+      for(var i = arr.length - 1; i >= 0; i--) {
+        arr[i] = func(arr[i]);
+      }
       return arr;
     };
 
@@ -185,7 +216,11 @@ describe("About Higher Order Functions pt 2", function () {
 
   it("can write your own reduce function", function() {
     var myReduce = function(arr, func, initial){
-      /* FILL ME IN */
+      var acc = initial;
+      for(var i = arr.length - 1; i >= 0; i--) {
+        acc = func(acc, arr[i]);
+      }
+      arr = acc;
       return arr;
     };
 
